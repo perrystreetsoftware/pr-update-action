@@ -88,7 +88,7 @@ async function run() {
     core.info(`Processed title text: ${processedTitleText}`);
 
     const updateTitle = ({
-      prefix: !title.toLowerCase().startsWith(processedTitleText.toLowerCase()),
+      prefix: true,
       suffix: !title.toLowerCase().endsWith(processedTitleText.toLowerCase()),
       replace: title.toLowerCase() !== processedTitleText.toLowerCase(),
     })[inputs.titleUpdateAction] || false;
@@ -97,7 +97,7 @@ async function run() {
 
     if (updateTitle) {
       request.title = ({
-        prefix: processedTitleText.concat(inputs.titleInsertSpace ? ' ': '', title),
+        prefix: getUpdatedTitle(title, processedTitleText),
         suffix: title.concat(inputs.titleInsertSpace ? ' ': '', processedTitleText),
         replace: processedTitleText,
       })[inputs.titleUpdateAction];
@@ -147,6 +147,12 @@ async function run() {
     core.error(error);
     core.setFailed(error.message);
   }
+}
+
+const getUpdatedTitle = (title, processedTitleText, insertSpace) => {
+  const regex = /(\[#.*\])/g
+  const strippedText = title.replaceAll(regex, '')
+  processedTitleText.concat(insertSpace ? ' ': '', strippedText)
 }
 
 run()
