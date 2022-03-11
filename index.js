@@ -150,12 +150,13 @@ async function run() {
 }
 
 const getUpdatedTitle = (title, processedTitleText, insertSpace) => {
+  core.info('title:', title)
+  core.info('processedTitleText:', processedTitleText)
   const regex = /(\[#.*\])/g
   const strippedText = title.replaceAll(regex, '')
 
   core.info('stripped text:', strippedText)
-  core.info('title:', title)
-  core.info('processedTitleText:', processedTitleText)
+
   processedTitleText.concat(insertSpace ? ' ': '', strippedText)
 }
 
