@@ -152,6 +152,10 @@ async function run() {
 const getUpdatedTitle = (title, processedTitleText, insertSpace) => {
   const regex = /(\[#.*\])/g
   const strippedText = title.replaceAll(regex, '')
+
+  console.log('stripped text:', strippedText)
+  console.log('title:', title)
+  console.log('processedTitleText:', processedTitleText)
   processedTitleText.concat(insertSpace ? ' ': '', strippedText)
 }
 
