@@ -96,10 +96,9 @@ async function run() {
     core.setOutput('titleUpdated', updateTitle.toString());
 
     if (updateTitle) {
-      core.info('title:', title)
-      core.info(title.replaceAll(/(\[#.*\])/g, ''))
+      core.info(processedTitleText.concat(inputs.titleInsertSpace ? ' ': '', title.replaceAll(/(\[#.*\])/g, '')))
       request.title = ({
-        prefix: getUpdatedTitle(title, processedTitleText),
+        prefix: processedTitleText.concat(inputs.titleInsertSpace ? ' ': '', title.replaceAll(/(\[#.*\])/g, '')),
         suffix: title.concat(inputs.titleInsertSpace ? ' ': '', processedTitleText),
         replace: processedTitleText,
       })[inputs.titleUpdateAction];
