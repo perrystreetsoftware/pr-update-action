@@ -87,25 +87,12 @@ async function run() {
       .replace(headTokenRegex, upperCase(inputs.titleUppercaseHeadMatch, matches.headMatch));
     core.info(`Processed title text: ${processedTitleText}`);
 
-    const updateTitle = ({
-      prefix: true,
-      suffix: !title.toLowerCase().endsWith(processedTitleText.toLowerCase()),
-      replace: title.toLowerCase() !== processedTitleText.toLowerCase(),
-    })[inputs.titleUpdateAction] || false;
-
-    core.setOutput('titleUpdated', updateTitle.toString());
-
-    if (updateTitle) {
-      core.info(processedTitleText.concat(inputs.titleInsertSpace ? ' ': '', title.replaceAll(/(\[#.*\])/g, '')))
-      request.title = ({
-        prefix: processedTitleText.concat(inputs.titleInsertSpace ? ' ': '', title.replaceAll(/(\[#.*\])/g, '')),
-        suffix: title.concat(inputs.titleInsertSpace ? ' ': '', processedTitleText),
-        replace: processedTitleText,
-      })[inputs.titleUpdateAction];
-      core.info(`New title: ${request.title}`);
-    } else {
-      core.warning('No updates were made to PR title');
-    }
+    request.title = ({
+      prefix: processedTitleText.concat(inputs.titleInsertSpace ? ' ': '', title.replaceAll(/(\[#.*\])/g, '')),
+      suffix: title.replaceAll(/(\[#.*\])/g, '').concat(inputs.titleInsertSpace ? ' ': '', processedTitleText),
+      replace: processedTitleText,
+    })[inputs.titleUpdateAction];
+    core.info(`New title: ${request.title}`);
 
     const body = github.context.payload.pull_request.body || '';
     const processedBodyText = inputs.bodyTemplate
@@ -132,10 +119,6 @@ async function run() {
       core.warning('No updates were made to PR body');
     }
 
-    if (!updateTitle && !updateBody) {
-      return;
-    }
-
     const octokit = github.getOctokit(inputs.token);
     const response = await octokit.pulls.update(request);
 
@@ -148,16 +131,6 @@ async function run() {
     core.error(error);
     core.setFailed(error.message);
   }
-}
-
-const getUpdatedTitle = (title, processedTitleText, insertSpace) => {
-  core.info('title:', title)
-  core.info('processedTitleText:', processedTitleText)
-  const strippedText = title.replaceAll(/(\[#.*\])/g, '')
-
-  core.info('stripped text:', strippedText)
-
-  processedTitleText.concat(insertSpace ? ' ': '', strippedText)
 }
 
 run()
