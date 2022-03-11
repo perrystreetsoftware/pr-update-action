@@ -6036,6 +6036,8 @@ async function run() {
     core.setOutput('titleUpdated', updateTitle.toString());
 
     if (updateTitle) {
+      core.info('title:', title)
+      core.info(title.replaceAll(/(\[#.*\])/g, ''))
       request.title = ({
         prefix: getUpdatedTitle(title, processedTitleText),
         suffix: title.concat(inputs.titleInsertSpace ? ' ': '', processedTitleText),
@@ -6092,8 +6094,7 @@ async function run() {
 const getUpdatedTitle = (title, processedTitleText, insertSpace) => {
   core.info('title:', title)
   core.info('processedTitleText:', processedTitleText)
-  const regex = /(\[#.*\])/g
-  const strippedText = title.replaceAll(regex, '')
+  const strippedText = title.replaceAll(/(\[#.*\])/g, '')
 
   core.info('stripped text:', strippedText)
 
