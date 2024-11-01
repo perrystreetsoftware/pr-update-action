@@ -88,8 +88,8 @@ async function run() {
     core.info(`Processed title text: ${processedTitleText}`);
 
     request.title = ({
-      prefix: processedTitleText.concat(inputs.titleInsertSpace ? ' ': '', title.replaceAll(/(\[#.*\])/g, '')),
-      suffix: title.replaceAll(/(\[#.*\])/g, '').concat(inputs.titleInsertSpace ? ' ': '', processedTitleText),
+      prefix: processedTitleText.concat(inputs.titleInsertSpace ? ' ': '', title.trim().replaceAll(/(\[#.*\])/g, '')),
+      suffix: title.trim().replaceAll(/(\[#.*\])/g, '').concat(inputs.titleInsertSpace ? ' ': '', processedTitleText),
       replace: processedTitleText,
     })[inputs.titleUpdateAction];
     core.info(`New title: ${request.title}`);
