@@ -87,11 +87,25 @@ async function run() {
       .replace(headTokenRegex, upperCase(inputs.titleUppercaseHeadMatch, matches.headMatch));
     core.info(`Processed title text: ${processedTitleText}`);
 
+    const trimmedPullRequestTitle = title.trim()
+    core.info(`Trimmed Pull Request Title: ${trimmedPullRequestTitle}`);
+
+    const titleWithoutPivotalIds = trimmedPullRequestTitle.replaceAll(/(\[#.*\])/g, '')
+    core.info(`Title without ids: ${trimmedPullRequestTitle}`);
+
+    const space = inputs.titleInsertSpace ? ' ': ''
+    const prefix = processedTitleText + space + titleWithoutPivotalIds
+    const suffix = titleWithoutPivotalIds + space + processedTitleText
+
+    core.info(`Prefixed: ${prefix}`);
+    core.info(`Suffixed: ${suffix}`);
+
     request.title = ({
-      prefix: processedTitleText.concat(inputs.titleInsertSpace ? ' ': '', title.trim().replaceAll(/(\[#.*\])/g, '')),
-      suffix: title.trim().replaceAll(/(\[#.*\])/g, '').concat(inputs.titleInsertSpace ? ' ': '', processedTitleText),
+      prefix,
+      suffix,
       replace: processedTitleText,
     })[inputs.titleUpdateAction];
+
     core.info(`New title: ${request.title}`);
 
     const body = github.context.payload.pull_request.body || '';
