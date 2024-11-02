@@ -97,8 +97,8 @@ async function run() {
     core.info(`Trimmed Pull Request Title: ${trimmedPullRequestTitle}`);
 
     const space = inputs.titleInsertSpace ? ' ': ''
-    const prefix = processedTitleText + space + titleWithoutPivotalIds
-    const suffix = titleWithoutPivotalIds + space + processedTitleText
+    const prefix = processedTitleText + space + trimmedPullRequestTitle
+    const suffix = trimmedPullRequestTitle + space + processedTitleText
 
     core.info(`Prefixed: ${prefix}`);
     core.info(`Suffixed: ${suffix}`);
