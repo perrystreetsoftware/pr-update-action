@@ -6030,11 +6030,11 @@ async function run() {
       .replace(headTokenRegex, upperCase(inputs.titleUppercaseHeadMatch, matches.headMatch));
     core.info(`Processed title text: ${processedTitleText}`);
 
-    const trimmedPullRequestTitle = title.trim()
-    core.info(`Trimmed Pull Request Title: ${trimmedPullRequestTitle}`);
+    const titleWithoutPivotalIds = title.trim().replaceAll(/(\[#.*\])/g, '')
+    core.info(`Title without ids: ${titleWithoutPivotalIds}`);
 
-    const titleWithoutPivotalIds = trimmedPullRequestTitle.replaceAll(/(\[#.*\])/g, '')
-    core.info(`Title without ids: ${trimmedPullRequestTitle}`);
+    const trimmedPullRequestTitle = titleWithoutPivotalIds.trim()
+    core.info(`Trimmed Pull Request Title: ${trimmedPullRequestTitle}`);
 
     const space = inputs.titleInsertSpace ? ' ': ''
     const prefix = processedTitleText + space + titleWithoutPivotalIds
