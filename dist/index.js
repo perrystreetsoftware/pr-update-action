@@ -6022,6 +6022,9 @@ async function run() {
     const upperCase = (upperCase, text) => upperCase ? text.toUpperCase() : text;
 
     const title = github.context.payload.pull_request.title || '';
+
+    core.info(`Original title text: ${title}`);
+
     const processedTitleText = inputs.titleTemplate
       .replace(baseTokenRegex, upperCase(inputs.titleUppercaseBaseMatch, matches.baseMatch))
       .replace(headTokenRegex, upperCase(inputs.titleUppercaseHeadMatch, matches.headMatch));
